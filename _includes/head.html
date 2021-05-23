@@ -1,0 +1,16 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+<title>{% if page.title and page.title != 'Index' %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+<meta name="description" content="{% if page.description %} {{ page.description }} {% endif %}">
+    
+<meta name="og:title" content="{% if page.title and page.title != 'Index' %}{{ page.title }} - {% endif %}{{ site.title }}">
+<meta name="og:description" content="{% if page.description %} {{ page.description }} {% endif %}">
+    
+<!-- CSS-related tags -->
+    
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="{{ site.icon }}">
+<link rel="shortcut icon" href="{{ site.icon }}">
