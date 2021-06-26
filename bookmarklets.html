@@ -24,36 +24,45 @@
     <br /><br /><br /><br />
     <div id="bookmarklets"></div>
     <script>
-      let host = location.hostname;
-      if (host == "") host = "Scratch-Bookmarklets.github.io";
-      host = "https://" + host;
-      let bookmarkletsDiv = document.querySelector("#bookmarklets");
-      fetch(`${host}/bookmarklets/bookmarklets.json`)
-        .then((res) => res.json())
-        .then(async (bookmarklets) => {
-          for (let j = 0; j < bookmarklets.length; j++) {
-            let name = bookmarklets[j];
-            let manifest = await fetch(
-              `${host}/bookmarklets/${name}/manifest.json`
-            ).then((res) => res.json());
-
-            let javascript = await fetch(
-              `${host}/bookmarklets/${name}/bookmarklet.js`
-            ).then((res) => res.text());
-
-            let newDiv = document.createElement("div");
-            let authors = "";
-            for (let j in manifest.authors) {
-              authors += `<a href="${manifest.authors[j].url}">${manifest.authors[j].name}</a> ,`;
+      let host = location.hostname ? "" : "https://scratch-bookmarklets.github.io/"
+      
+      let bookmarkletsDiv = document.getElementById('bookmarklets')
+      
+      fetch(`${host || ''}/bookmarklets/bookmarklets.json`)
+         .then(res => res.json())
+         .then(async bookmarklets => {
+            // Add extra JS
+            let extra = await fetch(`${host || ''}top.js`).then(res => res.text())
+            for (let j=0;j<bookmarklets.length;j++) {
+              let name = bookmarklets[j]
+              let manifest = await fetch(`${host || ''}bookmarklets/${name}/manifest.json`).then(res => res.json())
+              
+              let bookmarkletDiv = document.createElement('div')
+              let authors = ''
+              
+              for (let k=0;k<manifest.authors.length;k++) {
+                let author = manifest.authors[k]
+                
+                if (k !== 0) authors += ', '
+                
+                authors += `<a href="${author.url}">${author.name}</a>`
+              }
+              
+              // ---------------\ Minify JavaScript /----------------
+              let js = await fetch(`${host || ''}bookmarklets/${name}/bookmarklet.js`).then(res => res.text())
+              
+              js = extra + js;
+              js = js.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, "$1")
+              js = js.replace(/\r?\n|\r/g, "$1")
+              
+              
+              js += "void(0);"
+              
+              bookmarkletDiv.innerHTML = `<h1>${manifest.name}</h1><h3>by ${authors}</h3><br /><textarea class="bMarkArea" id="item-${j}" readonly>${js}</textarea><br /><a class="copy" href="javascript:${js}">Copy me into your bookmarklet bar!</a>`
+              
             }
-            newDiv.innerHTML = `<h1>${manifest.name}</h1><h3>by ${authors}</h3>
-                    <textarea class="bMarkArea"; id="item${j} readonly">javascript:${javascript
-              .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, "$1")
-              .replace(/\r?\n|\r/g, "")}void(0);</textarea><br><br><br>`;
-            bookmarkletsDiv.appendChild(newDiv);
-          }
-        });
+         })
     </script>
-    <script src="assets/js/script.js"
+    <script src="assets/js/script.js"></script>
   </body>
 </html>
