@@ -66,6 +66,8 @@
             js += "void(0);";
 
             bookmarkletDiv.innerHTML = `<h1>${manifest.name}</h1><h3>by ${authors}</h3><br /><textarea class="bMarkArea" id="item-${j}" readonly>${js}</textarea><br /><a class="copy" href="javascript:${js}">Copy me into your bookmarklet bar!</a>`;
+            
+            bookmarkletsDiv.innerHTML += bookmarkletDiv
           }
         });
     </script>
