@@ -30,7 +30,7 @@
 
       let bookmarkletsDiv = document.getElementById("bookmarklets");
 
-      fetch(`${host || ""}/bookmarklets/bookmarklets.json`)
+      fetch(`${host || ""}bookmarklets/bookmarklets.json`)
         .then((res) => res.json())
         .then(async (bookmarklets) => {
           // Add extra JS
